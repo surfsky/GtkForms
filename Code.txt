@@ -1,0 +1,10 @@
+            if (BackColor.HasValue)
+            {
+                cr.Save();
+                cr.SetSourceRGBA(BackColor.Value.R / 255f, BackColor.Value.G / 255f, BackColor.Value.B / 255f, BackColor.Value.A / 255f);
+                cr.Paint();
+                cr.Restore();
+            }
+
+
+                    public virtual Gtk.Container GtkContainer => GtkControl as Gtk.Container;

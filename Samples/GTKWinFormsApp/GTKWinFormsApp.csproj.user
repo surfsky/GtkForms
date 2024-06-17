@@ -5,7 +5,7 @@
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="Form1.cs">
+    <Compile Update="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Form2.cs">
@@ -19,7 +19,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Form1.resx">
+    <EmbeddedResource Update="FormMain.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

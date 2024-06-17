@@ -11,6 +11,9 @@ using System.Windows.Forms.Design;
 
 namespace System.Windows.Forms
 {
+    /// <summary>
+    /// Control class with the same Winforms api 
+    /// </summary>
     [DefaultEvent("Click")]
     [DefaultProperty("Text")]
     [Designer(typeof(ControlDesigner))]
@@ -19,11 +22,9 @@ namespace System.Windows.Forms
     {
         private Gtk.Application app = Application.Init();
         public string unique_key { get; protected set; }
-
-        public virtual Gtk.Widget Widget { get => GtkControl as Gtk.Widget; }
-        public virtual Gtk.Container GtkContainer { get => GtkControl as Gtk.Container; }
-        public virtual IControlGtk ISelf { get => GtkControl as IControlGtk; }
         public virtual object GtkControl { get; set; }
+        public virtual Gtk.Widget Widget     => GtkControl as Gtk.Widget;
+        public virtual IGtkPainter IPainter  => GtkControl as IGtkPainter;
 
         public Control()
         {
@@ -163,7 +164,7 @@ namespace System.Windows.Forms
         protected virtual void UpdateBackgroundStyle()
         {
             if (this.Widget != null && this.Widget.IsMapped)
-                ISelf.Override.OnAddClass();
+                IPainter.Painter.OnAddClass();
         }
         protected virtual void SetStyle(Gtk.Widget widget)
         {
@@ -372,14 +373,14 @@ namespace System.Windows.Forms
 
         public virtual bool UseVisualStyleBackColor { get; set; } = true;
         public virtual Color VisualStyleBackColor { get; }
-        public virtual ImageLayout BackgroundImageLayout { get => ISelf == null ? ImageLayout.None : ISelf.Override.BackgroundImageLayout; set { if (ISelf != null) { ISelf.Override.BackgroundImageLayout = value; } } }
-        public virtual Drawing.Image BackgroundImage { get => ISelf == null ? null : ISelf.Override.BackgroundImage; set { if (ISelf != null) { ISelf.Override.BackgroundImage = value; Refresh(); } } }
+        public virtual ImageLayout BackgroundImageLayout { get => IPainter == null ? ImageLayout.None : IPainter.Painter.BackgroundImageLayout; set { if (IPainter != null) { IPainter.Painter.BackgroundImageLayout = value; } } }
+        public virtual Drawing.Image BackgroundImage { get => IPainter == null ? null : IPainter.Painter.BackgroundImage; set { if (IPainter != null) { IPainter.Painter.BackgroundImage = value; Refresh(); } } }
         public virtual Color BackColor
         {
             get
             {
-                if (ISelf.Override.BackColor.HasValue)
-                    return ISelf.Override.BackColor.Value;
+                if (IPainter.Painter.BackColor.HasValue)
+                    return IPainter.Painter.BackColor.Value;
                 //else if (UseVisualStyleBackColor)
                 //    return Color.FromName("0");
                 //else
@@ -388,16 +389,16 @@ namespace System.Windows.Forms
                     return Color.FromName("0");
             }
             set {
-                ISelf.Override.BackColor = value;
-                ISelf.Override.OnAddClass();
+                IPainter.Painter.BackColor = value;
+                IPainter.Painter.OnAddClass();
                 UpdateStyle();
                 Refresh();
             }
         }
         public virtual event PaintEventHandler Paint
         {
-            add { ISelf.Override.Paint += value; }
-            remove { ISelf.Override.Paint -= value; }
+            add { IPainter.Painter.Paint += value; }
+            remove { IPainter.Painter.Paint -= value; }
         }
         #endregion
         public virtual AccessibleObject AccessibilityObject { get; }
@@ -753,8 +754,8 @@ namespace System.Windows.Forms
         {
             if (this.Widget != null)
             {
-                if (ISelf != null)
-                    ISelf.Override.OnAddClass();
+                if (IPainter != null)
+                    IPainter.Painter.OnAddClass();
                 Widget.Window.InvalidateRect(new Gdk.Rectangle(rc.X, rc.Y, rc.Width, rc.Height), invalidateChildren);
             }
         }
@@ -768,8 +769,8 @@ namespace System.Windows.Forms
         {
             if (this.Widget != null)
             {
-                if (ISelf != null)
-                    ISelf.Override.OnAddClass();
+                if (IPainter != null)
+                    IPainter.Painter.OnAddClass();
                 Widget.Window.InvalidateRect(Widget.Allocation, invalidateChildren);
             }
         }
@@ -869,8 +870,8 @@ namespace System.Windows.Forms
         {
             if (this.Widget != null && this.Widget.IsVisible)
             {
-                if (ISelf != null)
-                    ISelf.Override.ClearNativeBackground();
+                if (IPainter != null)
+                    IPainter.Painter.ClearNativeBackground();
                 Widget.QueueDraw();
             }
         }

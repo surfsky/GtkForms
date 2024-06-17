@@ -1,11 +1,11 @@
 ﻿namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
 {
-    public sealed class TreeViewBase : Gtk.TreeView, IControlGtk
+    public sealed class TreeViewBase : Gtk.TreeView, IGtkPainter
     {
-        public GtkControlOverride Override { get; set; }
+        public GtkControlPainter Painter { get; set; }
         internal TreeViewBase() : base()
         {
-            this.Override = new GtkControlOverride(this);
+            this.Painter = new GtkControlPainter(this);
             this.BorderWidth = 0;
             this.Expand = true;
             this.HeadersVisible = false;
@@ -13,17 +13,17 @@
         }
         public void AddClass(string cssClass)
         {
-            this.Override.AddClass(cssClass);
+            this.Painter.AddClass(cssClass);
         }
         protected override void OnShown()
         {
-            Override.OnAddClass();
+            Painter.OnAddClass();
             base.OnShown();
         }
         protected override bool OnDrawn(Cairo.Context cr)
         {
             Gdk.Rectangle rec = new Gdk.Rectangle(0, 0, this.AllocatedWidth, this.AllocatedHeight);
-            Override.OnPaint(cr, rec);
+            Painter.OnPaint(cr, rec);
             return base.OnDrawn(cr);
         }
     }

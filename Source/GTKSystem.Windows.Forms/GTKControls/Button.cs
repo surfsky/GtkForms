@@ -16,10 +16,6 @@ namespace System.Windows.Forms
     {
         public readonly ButtonBase self = new ButtonBase();
         public override object GtkControl => self;
-        public Button() : base()
-        {
-
-        }
         public override string Text { get => self.Label; set => self.Label = value; }
 
         public override event EventHandler Click
@@ -27,5 +23,7 @@ namespace System.Windows.Forms
             add { self.Clicked += value; }
             remove { self.Clicked -= value; }
         }
+
+        public Button() : base() { }
     }
 }

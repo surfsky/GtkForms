@@ -6,8 +6,8 @@
       "version": "8.0.0"
     },
     "additionalProbingPaths": [
-      "C:\\Users\\chj\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\chj\\.nuget\\packages",
+      "C:\\Users\\CJH\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\CJH\\.nuget\\packages",
       "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
       "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
     ],

@@ -19,7 +19,7 @@ namespace System.Windows.Forms
         protected Gtk.Viewport viewport = new Gtk.Viewport();
         public override object GtkControl => viewport;
         public readonly TreeViewBase self = new TreeViewBase();
-        public override IControlGtk ISelf { get => self; }
+        public override IGtkPainter IPainter { get => self; }
         private Gtk.TreeStore _store;
         internal TreeNode root;
         internal Gtk.TreeStore Store { get { return _store; } }

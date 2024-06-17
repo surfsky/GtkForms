@@ -69,7 +69,7 @@ namespace System.Windows.Forms
                     label.TooltipText = col.Text;
                     label.Markup = col.Text;
                     label.Data.Add("ColumnIndex", col.DisplayIndex);
-                    label.Override.DrawnBackground += Override_DrawnBackground;
+                    label.Painter.DrawnBackground += Override_DrawnBackground;
                     var columbt = new Gtk.Button(label) {  WidthRequest = col.Width, Halign = Gtk.Align.Fill, Valign = Gtk.Align.Fill };
                     columbt.ActionTargetValue=new GLib.Variant(col.DisplayIndex);
                     columbt.Data.Add("ColumnIndex", col.DisplayIndex);
@@ -250,7 +250,7 @@ namespace System.Windows.Forms
         {
             BoxBase hBox = new BoxBase(Gtk.Orientation.Horizontal, 4);
             if (item.BackColor.HasValue)
-                hBox.Override.BackColor = item.BackColor.Value;
+                hBox.Painter.BackColor = item.BackColor.Value;
             hBox.Valign = Gtk.Align.Fill;
             hBox.Halign = Gtk.Align.Start;
             hBox.BorderWidth = 0;

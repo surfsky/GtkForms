@@ -28,7 +28,7 @@ namespace GTKWinFormsApp
         {
             //button1.ForeColor=Color.Red;
             //button1.BackColor=Color.Green;
-            Form1 f = new Form1();
+            FormMain f = new FormMain();
             f.Show();
         }
 

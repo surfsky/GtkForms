@@ -27,7 +27,7 @@ namespace System.Windows.Forms
         protected Gtk.Viewport viewport = new Gtk.Viewport();
         public override object GtkControl => viewport;
         public readonly ListBoxBase self = new ListBoxBase();
-        public override IControlGtk ISelf { get => self; }
+        public override IGtkPainter IPainter { get => self; }
         protected override void UpdateStyle()
         {
             if(self.IsMapped) 

@@ -7,10 +7,10 @@ using System.Windows.Forms;
 
 namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
 {
-    public sealed class GtkControlOverride: IControlOverride
+    public sealed class GtkControlPainter   //: IControlPainter
     {
         private Widget container;
-        public GtkControlOverride(Widget container)
+        public GtkControlPainter(Widget container)
         {
             this.container = container;
         }

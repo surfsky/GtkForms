@@ -1,0 +1,123 @@
+总体
+    依赖
+        GtkSharp
+        GtkSystem.Windows.Forms
+        GtkSystem.Windows.FormsDesigner
+        类库名称和标准的winform一致，不用改代码。
+    缺点
+        要显示一个控制台窗口，如何隐藏？（改为窗体就行了）
+        下载gtk-3.24.24.zip 需要时间。可单独下载
+        MAC 下配置gtk环境总是失败。
+
+
+
+GTKSystemWinFormsApp11
+    可运行
+    内存占用低，cpu占用低
+    窗体设计器无法加载
+
+
+GTKWinFormsApp
+    可运行
+    主窗口 CPU占用25%，内存192M
+
+
+
+内部绘制逻辑比较乱，即用继承方式，又使用成员方式
+    Button : Control
+        ButtonBase self
+        public override object GtkControl => self;
+        因为GtkSharp已封装且无法修改，GtkForms只能用成员的方式实现，而不能用继承的方式实现。
+        如有能力，将GtkSharp和GtkForms合并，以简化继承逻辑。
+
+    Control : Component, IControl, ISynchronizeInvoke, IComponent, IDisposable, ISupportInitialize
+        该类提供了与Winforms Control一致的接口
+        public virtual Gtk.Widget Widget { get => GtkControl as Gtk.Widget; }
+        public virtual Gtk.Container GtkContainer { get => GtkControl as Gtk.Container; }
+        public virtual IControlGtk ISelf { get => GtkControl as IControlGtk; }
+        public virtual object GtkControl { get; set; }
+        public virtual event PaintEventHandler Paint
+        {
+            add { ISelf.Override.Paint += value; }
+            remove { ISelf.Override.Paint -= value; }
+        }
+        OnPaint 方法为空
+        绘制使用的是 Paint 事件
+
+    ButtonBase : Gtk.Button, IControlGtk
+        该类是GtkButton绘制的子类
+        public GtkControlOverride Override { get; set; }
+        OnDrawn
+        OnShown
+
+    Gtk.Button : Bin, IActionable, IWrapper, IActivatable
+        为Gtk api的封装，无法更改。
+
+
+
+    IControlGtk : IDisposable
+        GtkControlOverride Override { get; set; }
+
+     GtkControlOverride: IControlOverride
+        public void OnDrawnImage(Cairo.Context cr, Gdk.Rectangle area)
+        public void OnPaint(Cairo.Context cr, Gdk.Rectangle area)
+        负责绘制
+    
+    IControlOverride
+        event DrawnHandler DrawnBackground;
+        event PaintEventHandler Paint;
+        Color? BackColor { get; set; }
+        System.Drawing.Image BackgroundImage { get; set; }
+        ImageLayout BackgroundImageLayout { get; set; }
+        void AddClass(string cssClass);
+        void OnAddClass();
+        void OnDrawnBackground(Cairo.Context cr, Gdk.Rectangle area);
+        void OnPaint(Cairo.Context cr, Gdk.Rectangle area);
+
+
+    最后的绘制都是由GtkControlOverride.OnPaint() 方法调用 Paint 事件进行实现，非常绕。
+    类设计的逻辑
+        正常的逻辑是：Button : Control
+        Button 和 Control 保持和 winforms 一致的API
+        但 ButtonBase继承自 GtkButton，C#不支持多继承，只能将 ButtonBase 逻辑部分作为成员来实现。
+        详见 Doc/GtkFormsClass.jpg
+
+
+---------------------------------------------------
+建议重构
+---------------------------------------------------
+项目调整
+    /忽略 Warning
+        warning CS0067: 从不使用事件“DataGridView.UserDeletedRow”
+        warning CS0612: “ColorSelection.CurrentRgba”已过时
+        warning CS0169: 从不使用字段“ControlDesigner._ctrlSelect”
+        warning CS8632: 只能在 "#nullable" 注释上下文内的代码中使用可为 null 的引用类型的注释。
+    /调整输出为桌面程序
+    /只保留目标框架：net6.0。netcoreapp3.1支持的操作系统和net6一致，net8向下兼容net6
+    /Form1 改为 FormMain
+    /删除项目 GtkSystemWinFormsApp11
+    重构主窗体，左侧用树，右侧动态显示控件的使用用例
+    处理 System.Resources.Extensions 项目的warning，精简结构
+
+
+代码重构
+    /删除IControlOverride
+    /IControlGtk -> IGtkPainter
+        /GtkControlOverride Override -> Painter
+        /GtkControlOverride -> GtkControlPainter
+    迁移到 netstandard 2.0 以精简依赖。注意 GtkSharp不支持 netframework 4.6.2
+        需要删除很多可空引用类型代码，如：EventHandler? ChangeHandler
+        不支持 using System.Reflection.PortableExecutable;
+        error CS0122: “NotNullWhenAttribute”不可访问，因为它具有一定的保护级别
+        error CS0122: “DisallowNullAttribute”不可访问，因为它具有一定的保护级别
+        error CS0122: “AllowNullAttribute”不可访问，因为它具有一定的保护级别
+    重构Control 类
+        /删除 GtkContainer 属性，无引用
+        /ISelf -> IPainter
+        实现 IGtkPainter，简化继承结构
+    合并 Button 和 ButtonBase，简化结构
+        Button : Control
+            Gtk.Button GtkControl;
+            GtkControlPainter Painter;
+    查找其它样式的秘密
+

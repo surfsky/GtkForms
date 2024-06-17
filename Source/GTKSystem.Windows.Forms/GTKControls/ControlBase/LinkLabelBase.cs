@@ -1,22 +1,22 @@
 ﻿namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
 {
-    public sealed class LinkLabelBase : Gtk.LinkButton, IControlGtk
+    public sealed class LinkLabelBase : Gtk.LinkButton, IGtkPainter
     {
-        public GtkControlOverride Override { get; set; }
+        public GtkControlPainter Painter { get; set; }
         internal LinkLabelBase() : base("")
         {
-            this.Override = new GtkControlOverride(this);
-            this.Override.AddClass("LinkLabel");
+            this.Painter = new GtkControlPainter(this);
+            this.Painter.AddClass("LinkLabel");
         }
         protected override void OnShown()
         {
-            Override.OnAddClass();
+            Painter.OnAddClass();
             base.OnShown();
         }
         protected override bool OnDrawn(Cairo.Context cr)
         {
             Gdk.Rectangle rec = new Gdk.Rectangle(0, 0, this.AllocatedWidth, this.AllocatedHeight);
-            Override.OnPaint(cr, rec);
+            Painter.OnPaint(cr, rec);
             return base.OnDrawn(cr);
         }
     }

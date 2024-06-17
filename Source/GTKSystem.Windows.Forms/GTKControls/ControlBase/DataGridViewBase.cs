@@ -1,15 +1,15 @@
 ﻿namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
 {
-    public sealed class DataGridViewBase : Gtk.Viewport, IControlGtk
+    public sealed class DataGridViewBase : Gtk.Viewport, IGtkPainter
     {
-        public GtkControlOverride Override { get; set; }
+        public GtkControlPainter Painter { get; set; }
         private Gtk.ScrolledWindow scroll = new Gtk.ScrolledWindow();
         internal Gtk.TreeView GridView = new Gtk.TreeView();
         internal DataGridViewBase() : base()
         {
-            this.Override = new GtkControlOverride(this);
-            this.Override.AddClass("DataGridView");
-            this.Override.BackColor = System.Drawing.Color.White;
+            this.Painter = new GtkControlPainter(this);
+            this.Painter.AddClass("DataGridView");
+            this.Painter.BackColor = System.Drawing.Color.White;
             this.BorderWidth = 0;
             this.ShadowType = Gtk.ShadowType.Out;
             GridView.Valign = Gtk.Align.Fill;
@@ -21,13 +21,13 @@
         }
         protected override void OnShown()
         {
-            Override.OnAddClass();
+            Painter.OnAddClass();
             base.OnShown();
         }
         protected override bool OnDrawn(Cairo.Context cr)
         {
             Gdk.Rectangle rec = new Gdk.Rectangle(0, 0, this.AllocatedWidth, this.AllocatedHeight);
-            Override.OnPaint(cr, rec);
+            Painter.OnPaint(cr, rec);
             return base.OnDrawn(cr);
         }
     }

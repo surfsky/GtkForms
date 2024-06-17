@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
 {
-    public interface IControlOverride
+    public interface IControlPainter
     {
         event DrawnHandler DrawnBackground;
         event PaintEventHandler Paint;

@@ -1,16 +1,16 @@
 ﻿namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
 {
-    public sealed class ViewportBase : Gtk.Viewport, IControlGtk
+    public sealed class ViewportBase : Gtk.Viewport, IGtkPainter
     {
-        public GtkControlOverride Override { get; set; }
+        public GtkControlPainter Painter { get; set; }
         internal ViewportBase() : base()
         {
-            this.Override = new GtkControlOverride(this);
+            this.Painter = new GtkControlPainter(this);
         }
         protected override bool OnDrawn(Cairo.Context cr)
         {
             Gdk.Rectangle rec = new Gdk.Rectangle(0, 0, this.AllocatedWidth, this.AllocatedHeight);
-            Override.OnDrawnBackground(cr, rec);
+            Painter.OnDrawnBackground(cr, rec);
             return base.OnDrawn(cr);
         }
     }

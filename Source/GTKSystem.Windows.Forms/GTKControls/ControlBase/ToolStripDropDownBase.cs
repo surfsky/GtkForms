@@ -1,19 +1,19 @@
 ﻿namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
 {
-    public sealed class ToolStripDropDownBase : Gtk.Menu, IControlGtk
+    public sealed class ToolStripDropDownBase : Gtk.Menu, IGtkPainter
     {
-        public GtkControlOverride Override { get; set; }
+        public GtkControlPainter Painter { get; set; }
         internal ToolStripDropDownBase() : base()
         {
-            this.Override = new GtkControlOverride(this);
+            this.Painter = new GtkControlPainter(this);
         }
         public void AddClass(string cssClass)
         {
-            this.Override.AddClass(cssClass);
+            this.Painter.AddClass(cssClass);
         }
         protected override void OnShown()
         {
-            Override.OnAddClass();
+            Painter.OnAddClass();
             base.OnShown();
         }
     }

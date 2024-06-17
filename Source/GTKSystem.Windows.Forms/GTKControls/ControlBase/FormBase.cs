@@ -3,16 +3,16 @@
 
 namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
 {
-    public sealed class FormBase : Gtk.Dialog, IControlGtk
+    public sealed class FormBase : Gtk.Dialog, IGtkPainter
     {
         public readonly Gtk.ScrolledWindow ScrollView = new Gtk.ScrolledWindow();
         public readonly Gtk.Layout StatusBar = new Gtk.Layout(new Gtk.Adjustment(1, 1, 100, 1, 0, 1), new Gtk.Adjustment(1, 1, 100, 1, 0, 1));
         private readonly Gtk.Viewport StatusBarView = new Gtk.Viewport();
-        public GtkControlOverride Override { get; set; }
+        public GtkControlPainter Painter { get; set; }
         public FormBase() : base()
         {
-            this.Override = new GtkControlOverride(this);
-            this.Override.AddClass("Form");
+            this.Painter = new GtkControlPainter(this);
+            this.Painter.AddClass("Form");
             this.WindowPosition = Gtk.WindowPosition.Center;
             this.BorderWidth = 0;
             this.ContentArea.BorderWidth = 0;
@@ -41,8 +41,8 @@ namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
 
         public FormBase(string title, Gtk.Window parent, DialogFlags flags, params object[] button_data) : base(title, parent, flags, button_data)
         {
-            this.Override = new GtkControlOverride(this);
-            this.Override.AddClass("Form");
+            this.Painter = new GtkControlPainter(this);
+            this.Painter.AddClass("Form");
             this.WindowPosition = Gtk.WindowPosition.Center;
             this.BorderWidth = 0;
             this.SetDefaultSize(100, 100);
@@ -59,7 +59,7 @@ namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
         protected override bool OnDrawn(Cairo.Context cr)
         {
             Gdk.Rectangle rec = new Gdk.Rectangle(0, 0, this.AllocatedWidth, this.AllocatedHeight);
-            Override.OnPaint(cr, rec);
+            Painter.OnPaint(cr, rec);
             return base.OnDrawn(cr);
         }
         public void CloseWindow()

@@ -3,17 +3,17 @@
 
 namespace GTKSystem.Windows.Forms.GTKControls.ControlBase
 {
-    public sealed class LayoutBase: Gtk.Layout, IControlGtk
+    public sealed class LayoutBase: Gtk.Layout, IGtkPainter
     {
-        public GtkControlOverride Override { get; set; }
+        public GtkControlPainter Painter { get; set; }
         internal LayoutBase(Adjustment hadjustment, Adjustment vadjustment) : base(hadjustment, vadjustment)
         {
-            this.Override = new GtkControlOverride(this);
+            this.Painter = new GtkControlPainter(this);
         }
         protected override bool OnDrawn(Cairo.Context cr)
         {
             Gdk.Rectangle rec = new Gdk.Rectangle(0, 0, this.AllocatedWidth, this.AllocatedHeight);
-            Override.DrawnBackColor(cr, rec);
+            Painter.DrawnBackColor(cr, rec);
             return base.OnDrawn(cr);
         }
     }
